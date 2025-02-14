@@ -5,11 +5,24 @@
 #include "Components/InputComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "GameFramework\SpringArmComponent.h"
+#include "Camera/CameraComponent.h"
 
 AAlunaCharacter::AAlunaCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
+	//Define default rotation mode
+	bUseControllerRotationPitch = false;
+	bUseControllerRotationYaw = false;
+	bUseControllerRotationRoll = false;
+
+	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
+	SpringArm->SetupAttachment(GetRootComponent());
+	SpringArm->TargetArmLength = 300.f;
+
+	ViewCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("ViewCamera"));
+	ViewCamera->SetupAttachment(SpringArm);
 }
 
 void AAlunaCharacter::BeginPlay()
