@@ -5,9 +5,9 @@
 #include "Components/InputComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
-#include "GameFramework\SpringArmComponent.h"
+#include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
-#include "GameFramework\CharacterMovementComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "GroomComponent.h"
 
 AAlunaCharacter::AAlunaCharacter()
