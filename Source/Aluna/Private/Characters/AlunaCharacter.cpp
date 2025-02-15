@@ -64,6 +64,7 @@ void AAlunaCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 	{
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AAlunaCharacter::Move);
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AAlunaCharacter::Look);
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &AAlunaCharacter::Jump);
 	}
 }
 
@@ -92,5 +93,10 @@ void AAlunaCharacter::Look(const FInputActionValue& Value)
 		AddControllerYawInput(LookValue.X);
 		AddControllerPitchInput(LookValue.Y);
 	}
+}
+
+void AAlunaCharacter::Jump()
+{
+	Super::Jump();
 }
 

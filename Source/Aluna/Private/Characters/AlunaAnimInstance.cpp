@@ -25,5 +25,6 @@ void UAlunaAnimInstance::NativeUpdateAnimation(float DeltaTime)
 	if (AlunaCharacterMovement)
 	{
 		GroundSpeed = UKismetMathLibrary::VSizeXY(AlunaCharacterMovement->Velocity);
+		IsFalling = AlunaCharacterMovement->IsFalling();
 	}
 }
