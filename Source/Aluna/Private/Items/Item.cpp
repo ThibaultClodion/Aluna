@@ -4,6 +4,7 @@
 #include "Items/Item.h"
 #include "Aluna/DebugMacros.h"
 #include "Components/SphereComponent.h"
+#include "Characters/AlunaCharacter.h"
 
 
 AItem::AItem()
@@ -37,21 +38,21 @@ float AItem::TransformedCos()
 
 void AItem::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	const FString OtherActorName = FString("Start Overlapping with : ") + OtherActor->GetName();
+	AAlunaCharacter* AlunaCharacter = Cast<AAlunaCharacter>(OtherActor);
 
-	if (GEngine)
+	if (AlunaCharacter)
 	{
-		GEngine->AddOnScreenDebugMessage(1, 30.f, FColor::Red, OtherActorName);
+		AlunaCharacter->SetOverlappingItem(this);
 	}
 }
 
 void AItem::OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	const FString OtherActorName = FString("End Overlapping with : ") + OtherActor->GetName();
+	AAlunaCharacter* AlunaCharacter = Cast<AAlunaCharacter>(OtherActor);
 
-	if (GEngine)
+	if (AlunaCharacter)
 	{
-		GEngine->AddOnScreenDebugMessage(1, 30.f, FColor::Green, OtherActorName);
+		AlunaCharacter->SetOverlappingItem(nullptr);
 	}
 }
 
