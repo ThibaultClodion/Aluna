@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Item.h"
+#include "Items/Item.h"
 #include "Aluna/DebugMacros.h"
 #include "Components/SphereComponent.h"
 
