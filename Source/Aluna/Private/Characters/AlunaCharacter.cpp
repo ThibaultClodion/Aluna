@@ -12,7 +12,7 @@
 #include "GroomComponent.h"
 #include "Items/Item.h"
 #include "Items/Weapons/Weapon.h"
-#include "Animation/AnimMontage.h"
+
 
 
 AAlunaCharacter::AAlunaCharacter()
@@ -190,7 +190,7 @@ bool AAlunaCharacter::CanAttack()
 		&& CharacterState != ECharacterState::ECS_Unequipped;
 }
 
-void AAlunaCharacter::PlayEquipMontage(FName SectionName)
+void AAlunaCharacter::PlayEquipMontage(const FName& SectionName)
 {
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 
