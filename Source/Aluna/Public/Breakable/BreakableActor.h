@@ -26,4 +26,12 @@ protected:
 private:
 	UPROPERTY(VisibleAnywhere)
 	UGeometryCollectionComponent* GeometryCollection;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	class UCapsuleComponent* Capsule;
+
+	UPROPERTY(EditAnywhere, Category = "Breakable Properties")
+	TArray<TSubclassOf<class ATreasure>> TreasureClasses;
+
+	bool bBroken = false;
 };
