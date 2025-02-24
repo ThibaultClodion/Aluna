@@ -7,6 +7,8 @@
 #include "Aluna/DebugMacros.h"
 #include "Animation/AnimMontage.h"
 #include "Kismet/GameplayStatics.h"
+#include "Components/AttributeComponent.h"
+#include "HUD/HealthBarComponent.h"
 
 AEnemy::AEnemy()
 {
@@ -17,12 +19,20 @@ AEnemy::AEnemy()
 	GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
 	GetMesh()->SetGenerateOverlapEvents(true);
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
+
+	Attributes = CreateDefaultSubobject<UAttributeComponent>(TEXT("Attributes"));
+	HealthBarWidget = CreateDefaultSubobject<UHealthBarComponent>(TEXT("Health Bar"));
+	HealthBarWidget->SetupAttachment(GetRootComponent());
 }
 
 void AEnemy::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	if (HealthBarWidget)
+	{
+		HealthBarWidget->SetHealthPercent(1.f);
+	}
 }
 
 void AEnemy::Tick(float DeltaTime)
