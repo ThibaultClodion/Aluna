@@ -47,6 +47,8 @@ void AAlunaCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
+	Tags.Add(FName("AlunaCharacter"));
+
 	//Add Input Mapping Context
 	if (APlayerController* PlayerController = Cast<APlayerController>(GetController()))
 	{
