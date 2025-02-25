@@ -2,15 +2,15 @@
 
 
 #include "Enemy/Enemy.h"
+#include "AIController.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/CapsuleComponent.h"
-#include "Aluna/DebugMacros.h"
+#include "Perception/PawnSensingComponent.h"
 #include "Animation/AnimMontage.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/AttributeComponent.h"
 #include "HUD/HealthBarComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "AIController.h"
 #include "NavigationData.h"
 #include "Navigation/PathFollowingComponent.h"
 
@@ -32,6 +32,10 @@ AEnemy::AEnemy()
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationRoll = false;
+
+	PawnSensing = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("Pawn Sensing"));
+	PawnSensing->SightRadius = 4000.f;
+	PawnSensing->SetPeripheralVisionAngle(45.f);
 }
 
 void AEnemy::BeginPlay()
@@ -39,13 +43,17 @@ void AEnemy::BeginPlay()
 	Super::BeginPlay();
 
 	EnemyController = Cast<AAIController>(GetController());
+	MoveToTarget(PatrolTarget);
 
 	if (HealthBarWidget)
 	{
 		HealthBarWidget->SetVisibility(false);
 	}
 
-	MoveToTarget(PatrolTarget);
+	if (PawnSensing)
+	{
+		PawnSensing->OnSeePawn.AddDynamic(this, &AEnemy::PawnSeen);
+	}
 }
 
 void AEnemy::Tick(float DeltaTime)
@@ -260,6 +268,11 @@ void AEnemy::Die()
 	{
 		HealthBarWidget->SetVisibility(false);
 	}
+}
+
+void AEnemy::PawnSeen(APawn* Pawn)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Pawn Seen"));
 }
 
 void AEnemy::PatrolTimerFinished()
