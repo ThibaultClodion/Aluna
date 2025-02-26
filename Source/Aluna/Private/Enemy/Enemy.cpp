@@ -180,49 +180,27 @@ void AEnemy::HandleDamage(float DamageAmount)
 
 void AEnemy::Die()
 {
-	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	EnemyState = EEnemyState::EES_Dead;
+	ClearAttackTimer();
 
-	if (AnimInstance && DeathMontage)
+	PlayDeathMontage();
+	HideHealthBar();
+	DisableCapsule();
+	GetCharacterMovement()->bOrientRotationToMovement = false;
+	SetLifeSpan(DeathLifeSpan);
+}
+
+int32 AEnemy::PlayDeathMontage()
+{
+	const int32 Selection = Super::PlayDeathMontage();
+
+	TEnumAsByte<EDeathPose> Pose(Selection);
+	if (Pose < EDeathPose::EDP_MAX)
 	{
-		AnimInstance->Montage_Play(DeathMontage);
-
-		const int32 Selection = FMath::RandRange(0, 5);
-		FName SectionName = FName();
-
-		switch (Selection)
-		{
-		case 0:
-			DeathPose = EDeathPose::EDP_Death1;
-			SectionName = FName("Death1");
-			break;
-		case 1:
-			DeathPose = EDeathPose::EDP_Death2;
-			SectionName = FName("Death2");
-			break;
-		case 2:
-			DeathPose = EDeathPose::EDP_Death3;
-			SectionName = FName("Death3");
-			break;
-		case 3:
-			DeathPose = EDeathPose::EDP_Death4;
-			SectionName = FName("Death4");
-			break;
-		case 4:
-			DeathPose = EDeathPose::EDP_Death5;
-			SectionName = FName("Death5");
-			break;
-		case 5:
-			DeathPose = EDeathPose::EDP_Death6;
-			SectionName = FName("Death6");
-			break;
-		}
-
-		AnimInstance->Montage_JumpToSection(SectionName, DeathMontage);
+		DeathPose = Pose;
 	}
 
-	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	HideHealthBar();
-	SetLifeSpan(10.f);
+	return Selection;
 }
 
 void AEnemy::Destroyed()
@@ -243,35 +221,6 @@ void AEnemy::Attack()
 	Super::Attack();
 
 	PlayAttackMontage();
-}
-
-void AEnemy::PlayAttackMontage()
-{
-	Super::PlayAttackMontage();
-
-	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
-
-	if (AnimInstance && AttackMontage)
-	{
-		AnimInstance->Montage_Play(AttackMontage);
-		const int32 Selection = FMath::RandRange(0, 2);
-		FName SectionName = FName();
-
-		switch (Selection)
-		{
-		case 0:
-			SectionName = FName("Attack1");
-			break;
-		case 1:
-			SectionName = FName("Attack2");
-			break;
-		case 2:
-			SectionName = FName("Attack3");
-			break;
-		}
-
-		AnimInstance->Montage_JumpToSection(SectionName, AttackMontage);
-	}
 }
 
 void AEnemy::PawnSeen(APawn* Pawn)

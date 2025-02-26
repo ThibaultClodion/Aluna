@@ -3,6 +3,7 @@
 
 #include "Characters/BaseCharacter.h"
 #include "Components/BoxComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "Components/AttributeComponent.h"
 #include "Items/Weapons/Weapon.h"
 #include "Kismet/GameplayStatics.h"
@@ -40,9 +41,14 @@ void ABaseCharacter::Attack()
 
 }
 
-void ABaseCharacter::PlayAttackMontage()
+int32 ABaseCharacter::PlayAttackMontage()
 {
+	return PlayRandomMontageSection(AttackMontage, AttackMontageSections);
+}
 
+int32 ABaseCharacter::PlayDeathMontage()
+{
+	return PlayRandomMontageSection(DeathMontage, DeathMontageSections);
 }
 
 bool ABaseCharacter::CanAttack()
@@ -129,6 +135,32 @@ bool ABaseCharacter::IsAlive()
 void ABaseCharacter::Die()
 {
 
+}
+
+void ABaseCharacter::DisableCapsule()
+{
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+}
+
+void ABaseCharacter::PlayMontageSection(UAnimMontage* Montage, const FName& SectionName)
+{
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+
+	if (AnimInstance && Montage)
+	{
+		AnimInstance->Montage_Play(Montage);
+		AnimInstance->Montage_JumpToSection(SectionName, Montage);
+	}
+}
+
+int32 ABaseCharacter::PlayRandomMontageSection(UAnimMontage* Montage, const TArray<FName>& SectionNames)
+{
+	if (SectionNames.Num() <= 0) return -1;
+
+	const int32 SelectionIndex = FMath::RandRange(0, SectionNames.Num() - 1);
+	PlayMontageSection(Montage, SectionNames[SelectionIndex]);
+
+	return SelectionIndex;
 }
 
 void ABaseCharacter::AttackEnd()
