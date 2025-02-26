@@ -23,11 +23,36 @@ class ALUNA_API AAlunaCharacter : public ABaseCharacter
 
 public:
 	AAlunaCharacter();
-	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 protected:
 	virtual void BeginPlay() override;
+
+	/** Callbacks for input*/
+	void Move(const FInputActionValue& Value);
+	void Look(const FInputActionValue& Value);
+	void EKeyPressed();
+	virtual void Attack() override;
+	virtual void Jump() override;
+
+	void EquipWeapon(AWeapon* Weapon);
+	virtual void AttackEnd() override;
+	virtual bool CanAttack() override;
+
+	void PlayEquipMontage(const FName& SectionName);
+	bool CanDisarm();
+	bool CanArm();
+	void Disarm();
+	void Arm();
+
+	UFUNCTION(BlueprintCallable)
+	void AttachWeaponToBack();
+
+	UFUNCTION(BlueprintCallable)
+	void AttachWeaponToHand();
+
+	UFUNCTION(BlueprintCallable)
+	void FinishEquipping();
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
 	UInputMappingContext* AlunaMappingContext;
@@ -46,32 +71,6 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
 	UInputAction* AttackAction;
-
-	/**
-	* Callbacks for input
-	*/
-	void Move(const FInputActionValue& Value);
-	void Look(const FInputActionValue& Value);
-	void EKeyPressed();
-	virtual void Attack() override;
-	virtual void Jump() override;
-
-
-	virtual void AttackEnd() override;
-	virtual bool CanAttack() override;
-
-	void PlayEquipMontage(const FName& SectionName);
-	bool CanDisarm();
-	bool CanArm();
-
-	UFUNCTION(BlueprintCallable)
-	void Disarm();
-
-	UFUNCTION(BlueprintCallable)
-	void Arm();
-
-	UFUNCTION(BlueprintCallable)
-	void FinishEquipping();
 
 private:
 	ECharacterState CharacterState = ECharacterState::ECS_Unequipped;

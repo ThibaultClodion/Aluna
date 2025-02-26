@@ -3,7 +3,6 @@
 
 #include "Characters/AlunaCharacter.h"
 #include "Components/InputComponent.h"
-#include "Components/BoxComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -17,7 +16,7 @@
 
 AAlunaCharacter::AAlunaCharacter()
 {
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 	//Define default rotation mode
 	bUseControllerRotationPitch = false;
@@ -57,12 +56,6 @@ void AAlunaCharacter::BeginPlay()
 			Subsystem->AddMappingContext(AlunaMappingContext, 0);
 		}
 	}
-}
-
-void AAlunaCharacter::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
 }
 
 void AAlunaCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -117,24 +110,17 @@ void AAlunaCharacter::EKeyPressed()
 
 	if (OverlappingWeapon)
 	{
-		OverlappingWeapon->Equip(GetMesh(), FName("RightHandSocket"), this, this);
-		CharacterState = ECharacterState::ECS_EquippedOneHandedWeapon;
-		EquippedWeapon = OverlappingWeapon;
-		OverlappingItem = nullptr;
+		EquipWeapon(OverlappingWeapon);
 	}
 	else
 	{
 		if (CanDisarm())
 		{
-			PlayEquipMontage(FName("Unequip"));
-			CharacterState = ECharacterState::ECS_Unequipped;
-			ActionState = EActionState::EAS_EquippingWeapon;
+			Disarm();
 		}
 		else if (CanArm())
 		{
-			PlayEquipMontage(FName("Equip"));
-			CharacterState = ECharacterState::ECS_EquippedOneHandedWeapon;
-			ActionState = EActionState::EAS_EquippingWeapon;
+			Arm();
 		}
 	}
 
@@ -149,6 +135,14 @@ void AAlunaCharacter::Attack()
 		PlayAttackMontage();
 		ActionState = EActionState::EAS_Attacking;
 	}
+}
+
+void AAlunaCharacter::EquipWeapon(AWeapon* Weapon)
+{
+	Weapon->Equip(GetMesh(), FName("RightHandSocket"), this, this);
+	CharacterState = ECharacterState::ECS_EquippedOneHandedWeapon;
+	EquippedWeapon = Weapon;
+	OverlappingItem = nullptr;
 }
 
 void AAlunaCharacter::AttackEnd()
@@ -188,13 +182,27 @@ bool AAlunaCharacter::CanArm()
 
 void AAlunaCharacter::Disarm()
 {
+	PlayEquipMontage(FName("Unequip"));
+	CharacterState = ECharacterState::ECS_Unequipped;
+	ActionState = EActionState::EAS_EquippingWeapon;
+}
+
+void AAlunaCharacter::Arm()
+{
+	PlayEquipMontage(FName("Equip"));
+	CharacterState = ECharacterState::ECS_EquippedOneHandedWeapon;
+	ActionState = EActionState::EAS_EquippingWeapon;
+}
+
+void AAlunaCharacter::AttachWeaponToBack()
+{
 	if (EquippedWeapon)
 	{
 		EquippedWeapon->AttachMeshToSocket(GetMesh(), FName("SpineSocket"));
 	}
 }
 
-void AAlunaCharacter::Arm()
+void AAlunaCharacter::AttachWeaponToHand()
 {
 	if (EquippedWeapon)
 	{
