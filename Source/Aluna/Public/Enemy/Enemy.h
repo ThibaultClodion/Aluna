@@ -18,7 +18,6 @@ class ALUNA_API AEnemy : public ABaseCharacter
 public:
 	AEnemy();
 	virtual void Tick(float DeltaTime) override;
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	virtual void GetHit_Implementation(const FVector& ImpactPoint) override;
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
@@ -32,14 +31,22 @@ protected:
 	void CheckPatrolTarget();
 	void CheckCombatTarget();
 
+	virtual void HandleDamage(float DamageAmount);
 	virtual void Die() override;
 	virtual void Destroyed() override;
+
+	virtual bool CanAttack() override;
+	virtual void Attack() override;
+	virtual void PlayAttackMontage() override;
 
 	UFUNCTION()
 	void PawnSeen(APawn* Pawn);
 
 	UPROPERTY(BlueprintReadOnly)
-	EDeathPose DeathPose = EDeathPose::EDP_Alive;
+	EDeathPose DeathPose;
+
+	UPROPERTY(BlueprintReadOnly)
+	EEnemyState EnemyState = EEnemyState::EES_Patrolling;
 
 private:
 
@@ -56,7 +63,7 @@ private:
 	AActor* CombatTarget;
 
 	UPROPERTY(EditAnywhere)
-	double CombatRadius = 1000.f;
+	double CombatRadius = 750.f;
 
 	UPROPERTY(EditAnywhere)
 	double AttackRadius = 150.f;
@@ -86,6 +93,35 @@ private:
 	UPROPERTY(EditAnywhere, Category = "AI Navigation")
 	float WaitMax = 10.f;
 
-	EEnemyState EnemyState = EEnemyState::EES_Patrolling;
+	/** AI Behavior*/
+	void HideHealthBar();
+	void ShowHealthBar();
 
+	bool IsOutsideCombatRadius();
+	bool IsOutsideAttackRadius();
+	bool IsChasing();
+	bool IsAttacking();
+	bool IsDead();
+	bool IsEngaged();
+
+	void LoseInterest();
+	void StartPatrolling();
+	void ClearPatrolTimer();
+	void ChaseTarget();
+
+	/** Combat */
+	void StartAttackTimer();
+	void ClearAttackTimer();
+
+	FTimerHandle AttackTimer;
+
+	UPROPERTY(EditAnywhere, Category = Combat)
+	float AttackMin = 0.5f;
+	UPROPERTY(EditAnywhere, Category = Combat)
+	float AttackMax = 1.f;
+
+	UPROPERTY(EditAnywhere, Category = Combat)
+	float PatrollingSpeed = 125.f;
+	UPROPERTY(EditAnywhere, Category = Combat)
+	float ChasingSpeed = 450.f;
 };

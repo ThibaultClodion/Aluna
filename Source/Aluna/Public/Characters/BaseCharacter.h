@@ -31,7 +31,11 @@ protected:
 	virtual bool CanAttack();
 
 	void PlayHitReactMontage(const FName& SectionName);
+	void PlayHitSound(const FVector& ImpactPoint);
+	void SpawnHitParticles(const FVector& ImpactPoint);
 	void DirectionalHitReact(const FVector& ImpactPoint);
+	virtual void HandleDamage(float DamageAmount);
+	bool IsAlive();
 	virtual void Die();
 
 	UFUNCTION(BlueprintCallable)
@@ -49,13 +53,15 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = Montages)
 	UAnimMontage* DeathMontage;
 
+	UPROPERTY(VisibleAnywhere)
+	UAttributeComponent* Attributes;
+
+private:
+
 	UPROPERTY(EditAnywhere, Category = Sounds)
 	USoundBase* HitSound;
 
 	UPROPERTY(EditAnywhere, Category = VisualEffects)
 	UParticleSystem* HitParticles;
-
-	UPROPERTY(VisibleAnywhere)
-	UAttributeComponent* Attributes;
 
 };

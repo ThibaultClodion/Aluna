@@ -142,6 +142,8 @@ void AAlunaCharacter::EKeyPressed()
 
 void AAlunaCharacter::Attack()
 {
+	Super::Attack();
+
 	if (CanAttack())
 	{
 		PlayAttackMontage();
@@ -151,6 +153,8 @@ void AAlunaCharacter::Attack()
 
 void AAlunaCharacter::PlayAttackMontage()
 {
+	Super::PlayAttackMontage();
+
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 
 	if (AnimInstance && AttackMontage)
