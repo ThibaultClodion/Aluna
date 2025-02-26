@@ -33,6 +33,7 @@ protected:
 	void CheckCombatTarget();
 
 	virtual void Die() override;
+	virtual void Destroyed() override;
 
 	UFUNCTION()
 	void PawnSeen(APawn* Pawn);
@@ -47,6 +48,9 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	UPawnSensingComponent* PawnSensing;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class AWeapon> WeaponClass;
 
 	UPROPERTY()
 	AActor* CombatTarget;
