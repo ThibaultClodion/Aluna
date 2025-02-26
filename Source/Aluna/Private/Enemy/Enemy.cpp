@@ -98,7 +98,7 @@ void AEnemy::CheckCombatTarget()
 	{
 		//Outside attack range, chase character
 		EnemyState = EEnemyState::EES_Chasing;
-		GetCharacterMovement()->MaxWalkSpeed = 300.f;
+		GetCharacterMovement()->MaxWalkSpeed = 450.f;
 		MoveToTarget(CombatTarget);
 	}
 	else if (InTargetRange(CombatTarget, AttackRadius) && EnemyState != EEnemyState::EES_Attacking)
