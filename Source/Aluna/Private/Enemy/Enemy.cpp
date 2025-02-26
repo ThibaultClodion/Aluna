@@ -213,14 +213,21 @@ void AEnemy::Destroyed()
 
 bool AEnemy::CanAttack()
 {
-	return !IsOutsideAttackRadius() && !IsAttacking() && !IsDead();
+	return !IsOutsideAttackRadius() && !IsAttacking() && !IsDead() && !IsEngaged();
 }
 
 void AEnemy::Attack()
 {
 	Super::Attack();
 
+	EnemyState = EEnemyState::EES_Engaged;
 	PlayAttackMontage();
+}
+
+void AEnemy::AttackEnd()
+{
+	EnemyState = EEnemyState::EES_NoState;
+	CheckCombatTarget();
 }
 
 void AEnemy::PawnSeen(APawn* Pawn)

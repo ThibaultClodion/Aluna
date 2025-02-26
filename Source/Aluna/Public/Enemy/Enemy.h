@@ -38,6 +38,7 @@ protected:
 
 	virtual bool CanAttack() override;
 	virtual void Attack() override;
+	virtual void AttackEnd() override;
 
 	UPROPERTY(EditAnywhere, Category = Combat)
 	float DeathLifeSpan = 8.f;
