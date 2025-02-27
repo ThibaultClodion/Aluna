@@ -77,10 +77,11 @@ void AAlunaCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 	}
 }
 
-void AAlunaCharacter::GetHit_Implementation(const FVector& ImpactPoint)
+void AAlunaCharacter::GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter)
 {
-	Super::GetHit_Implementation(ImpactPoint);
+	Super::GetHit_Implementation(ImpactPoint, Hitter);
 
+	ActionState = EActionState::EAS_HitReaction;
 }
 
 void AAlunaCharacter::Move(const FInputActionValue& Value)
@@ -224,6 +225,11 @@ void AAlunaCharacter::AttachWeaponToHand()
 }
 
 void AAlunaCharacter::FinishEquipping()
+{
+	ActionState = EActionState::EAS_Unoccupied;
+}
+
+void AAlunaCharacter::HitReactEnd()
 {
 	ActionState = EActionState::EAS_Unoccupied;
 }

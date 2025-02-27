@@ -69,11 +69,12 @@ void AEnemy::Destroyed()
 	}
 }
 
-void AEnemy::GetHit_Implementation(const FVector& ImpactPoint)
+void AEnemy::GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter)
 {
-	Super::GetHit_Implementation(ImpactPoint);
+	Super::GetHit_Implementation(ImpactPoint, Hitter);
 
-	ShowHealthBar();
+	if(!IsDead()) ShowHealthBar();
+	ClearPatrolTimer();
 }
 
 void AEnemy::BeginPlay()
@@ -94,6 +95,7 @@ void AEnemy::Die()
 	HideHealthBar();
 	DisableCapsule();
 	GetCharacterMovement()->bOrientRotationToMovement = false;
+	SetWeaponCollisionEnabled(ECollisionEnabled::NoCollision);
 	SetLifeSpan(DeathLifeSpan);
 }
 
