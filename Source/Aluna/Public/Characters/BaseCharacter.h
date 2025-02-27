@@ -29,6 +29,7 @@ protected:
 	virtual bool CanAttack();
 
 	virtual int32 PlayAttackMontage();
+	void StopAttackMontage();
 	virtual int32 PlayDeathMontage();
 	void PlayHitReactMontage(const FName& SectionName);
 
