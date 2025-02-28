@@ -99,14 +99,14 @@ void AEnemy::BeginPlay()
 
 void AEnemy::Die()
 {
-	EnemyState = EEnemyState::EES_Dead;
-	ClearAttackTimer();
+	Super::Die();
 
-	PlayDeathMontage();
+	EnemyState = EEnemyState::EES_Dead;
+
+	ClearAttackTimer();
 	HideHealthBar();
 	DisableCapsule();
 	GetCharacterMovement()->bOrientRotationToMovement = false;
-	SetWeaponCollisionEnabled(ECollisionEnabled::NoCollision);
 	SetLifeSpan(DeathLifeSpan);
 }
 
@@ -137,19 +137,6 @@ void AEnemy::HandleDamage(float DamageAmount)
 	{
 		HealthBarWidget->SetHealthPercent(Attributes->GetHealthPercent());
 	}
-}
-
-int32 AEnemy::PlayDeathMontage()
-{
-	const int32 Selection = Super::PlayDeathMontage();
-
-	TEnumAsByte<EDeathPose> Pose(Selection);
-	if (Pose < EDeathPose::EDP_MAX)
-	{
-		DeathPose = Pose;
-	}
-
-	return Selection;
 }
 
 void AEnemy::InitializeEnemy()

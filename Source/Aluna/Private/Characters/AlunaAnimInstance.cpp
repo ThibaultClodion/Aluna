@@ -27,5 +27,7 @@ void UAlunaAnimInstance::NativeUpdateAnimation(float DeltaTime)
 		GroundSpeed = UKismetMathLibrary::VSizeXY(AlunaCharacterMovement->Velocity);
 		IsFalling = AlunaCharacterMovement->IsFalling();
 		CharacterState = AlunaCharacter->GetCharacterState();
+		ActionState = AlunaCharacter->GetActionState();
+		DeathPose = AlunaCharacter->GetDeathPose();
 	}
 }

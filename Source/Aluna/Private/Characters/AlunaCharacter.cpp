@@ -89,7 +89,10 @@ void AAlunaCharacter::GetHit_Implementation(const FVector& ImpactPoint, AActor* 
 {
 	Super::GetHit_Implementation(ImpactPoint, Hitter);
 
-	ActionState = EActionState::EAS_HitReaction;
+	if (Attributes && Attributes->IsAlive())
+	{
+		ActionState = EActionState::EAS_HitReaction;
+	}
 }
 
 void AAlunaCharacter::Move(const FInputActionValue& Value)
@@ -178,6 +181,13 @@ bool AAlunaCharacter::CanAttack()
 {
 	return ActionState == EActionState::EAS_Unoccupied
 		&& CharacterState != ECharacterState::ECS_Unequipped;
+}
+
+void AAlunaCharacter::Die()
+{
+	Super::Die();
+
+	ActionState = EActionState::EAS_Dead;
 }
 
 void AAlunaCharacter::PlayEquipMontage(const FName& SectionName)

@@ -40,6 +40,7 @@ protected:
 	void EquipWeapon(AWeapon* Weapon);
 	virtual void AttackEnd() override;
 	virtual bool CanAttack() override;
+	virtual void Die() override;
 
 	void PlayEquipMontage(const FName& SectionName);
 	bool CanDisarm();
@@ -113,4 +114,5 @@ private:
 public:
 	FORCEINLINE void SetOverlappingItem(AItem* Item) { OverlappingItem = Item; }
 	FORCEINLINE ECharacterState GetCharacterState() const { return CharacterState; }
+	FORCEINLINE EActionState GetActionState() const { return ActionState; }
 };
