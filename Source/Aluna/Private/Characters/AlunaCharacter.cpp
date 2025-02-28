@@ -12,6 +12,9 @@
 #include "GroomComponent.h"
 #include "Items/Item.h"
 #include "Items/Weapons/Weapon.h"
+#include "HUD/AlunaHUD.h"
+#include "HUD/AlunaOverlay.h"
+#include "Components/AttributeComponent.h"
 
 
 
@@ -55,13 +58,10 @@ void AAlunaCharacter::BeginPlay()
 
 	Tags.Add(FName("EngageableTarget"));
 
-	//Add Input Mapping Context
 	if (APlayerController* PlayerController = Cast<APlayerController>(GetController()))
 	{
-		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
-		{
-			Subsystem->AddMappingContext(AlunaMappingContext, 0);
-		}
+		InitializeMappingContext(PlayerController);
+		InitializeAlunaOverlay(PlayerController);
 	}
 }
 
@@ -75,6 +75,14 @@ void AAlunaCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 		EnhancedInputComponent->BindAction(EquipAction, ETriggerEvent::Started, this, &AAlunaCharacter::EKeyPressed);
 		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Started, this, &AAlunaCharacter::Attack);
 	}
+}
+
+float AAlunaCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	HandleDamage(DamageAmount);
+	SetHUDHealth();
+
+	return DamageAmount;
 }
 
 void AAlunaCharacter::GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter)
@@ -115,6 +123,8 @@ void AAlunaCharacter::Look(const FInputActionValue& Value)
 
 void AAlunaCharacter::Jump()
 {
+	if (ActionState != EActionState::EAS_Unoccupied) return;
+
 	Super::Jump();
 }
 
@@ -234,3 +244,34 @@ void AAlunaCharacter::HitReactEnd()
 	ActionState = EActionState::EAS_Unoccupied;
 }
 
+void AAlunaCharacter::InitializeMappingContext(APlayerController* PlayerController)
+{
+	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+	{
+		Subsystem->AddMappingContext(AlunaMappingContext, 0);
+	}
+}
+
+void AAlunaCharacter::InitializeAlunaOverlay(APlayerController* PlayerController)
+{
+	AAlunaHUD* AlunaHUD = Cast<AAlunaHUD>(PlayerController->GetHUD());
+	if (AlunaHUD)
+	{
+		AlunaOverlay = AlunaHUD->GetAlunaOverlay();
+		if (AlunaOverlay && Attributes)
+		{
+			AlunaOverlay->SetHealthBarPercent(Attributes->GetHealthPercent());
+			AlunaOverlay->SetStaminaBarPercent(1.f);
+			AlunaOverlay->SetGoldText(0);
+			AlunaOverlay->SetSoulText(0);
+		}
+	}
+}
+
+void AAlunaCharacter::SetHUDHealth()
+{
+	if (AlunaOverlay && Attributes)
+	{
+		AlunaOverlay->SetHealthBarPercent(Attributes->GetHealthPercent());
+	}
+}

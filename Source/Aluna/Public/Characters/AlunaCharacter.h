@@ -24,6 +24,7 @@ class ALUNA_API AAlunaCharacter : public ABaseCharacter
 public:
 	AAlunaCharacter();
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 	virtual void GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter) override;
 
 protected:
@@ -77,6 +78,11 @@ protected:
 	UInputAction* AttackAction;
 
 private:
+
+	void InitializeMappingContext(APlayerController* PlayerController);
+	void InitializeAlunaOverlay(APlayerController* PlayerController);
+	void SetHUDHealth();
+
 	ECharacterState CharacterState = ECharacterState::ECS_Unequipped;
 
 	UPROPERTY(BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
@@ -99,6 +105,9 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = Montages)
 	UAnimMontage* EquipMontage;
+
+	UPROPERTY();
+	class UAlunaOverlay* AlunaOverlay;
 
 
 public:
