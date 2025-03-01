@@ -33,6 +33,7 @@ protected:
 
 	virtual void HandleDamage(float DamageAmount);
 	virtual void Die() override;
+	void SpawnSoul();
 
 
 	virtual bool CanAttack() override;
@@ -119,4 +120,7 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = Combat)
 	float DeathLifeSpan = 8.f;
+
+	UPROPERTY(EditAnywhere, Category = Combat)
+	TSubclassOf<class ASoul> SoulClass;
 };
