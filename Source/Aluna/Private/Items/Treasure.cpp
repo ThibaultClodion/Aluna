@@ -11,11 +11,7 @@ void ATreasure::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor
 
 	if (AlunaCharacter)
 	{
-		if (PickupSound)
-		{
-			UGameplayStatics::PlaySoundAtLocation(this, PickupSound, GetActorLocation());
-		}
-
+		SpawnPickupSound();
 		Destroy();
 	}
 }
