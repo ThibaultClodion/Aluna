@@ -15,6 +15,8 @@
 #include "HUD/AlunaHUD.h"
 #include "HUD/AlunaOverlay.h"
 #include "Components/AttributeComponent.h"
+#include "Items/Soul.h"
+#include "Items/Treasure.h"
 
 
 
@@ -102,7 +104,20 @@ void AAlunaCharacter::SetOverlappingItem(AItem* Item)
 
 void AAlunaCharacter::AddSouls(ASoul* Soul)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Add Soul"))
+	if (Attributes && AlunaOverlay)
+	{
+		Attributes->AddSouls(Soul->GetSouls());
+		AlunaOverlay->SetSoulText(Attributes->GetSouls());
+	}
+}
+
+void AAlunaCharacter::AddGold(ATreasure* Treasure)
+{
+	if (Attributes && AlunaOverlay)
+	{
+		Attributes->AddGold(Treasure->GetGold());
+		AlunaOverlay->SetGoldText(Attributes->GetGold());
+	}
 }
 
 void AAlunaCharacter::Move(const FInputActionValue& Value)

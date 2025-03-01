@@ -17,6 +17,7 @@ class UGroomComponent;
 class AItem;
 class UAnimMontage;
 class ASoul;
+class ATreasure;
 
 UCLASS()
 class ALUNA_API AAlunaCharacter : public ABaseCharacter, public IPickupInterface
@@ -30,6 +31,7 @@ public:
 	virtual void GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter) override;
 	virtual void SetOverlappingItem(AItem* Item) override;
 	virtual void AddSouls(ASoul* Soul) override;
+	virtual void AddGold(class ATreasure* Treasure) override;
 
 protected:
 	virtual void BeginPlay() override;
